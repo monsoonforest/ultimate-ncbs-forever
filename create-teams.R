@@ -1,0 +1,75 @@
+## load and/install dplyr
+library(dplyr)
+
+## read in the csv
+play <- read.csv("IInd-2019-ultimate-ncbs-seeds-working.csv")
+
+## subset data for use
+playsub <- play %>% select(name, gender, total)
+
+##  group males and females separately
+males <- playsub %>% filter(gender=="male")
+females <- playsub %>% filter(gender=="female")
+
+## type the players differently
+males <- males %>%
+    mutate(type = lapply(total, function(x) {
+        if (x %in% c(0:9)) {
+            'wildcards'
+        } else if (x %in% c(10:16)) {
+            'game-changers'
+        } else if (x %in% c(16:25)) {
+            'play-makers'
+        }
+    }))
+
+## create dataframes of the 3 types
+df1<- subset(males, type == "wildcards")
+
+df2<- subset(males, type == "game-changers")
+
+df3<- subset(males, type == "play-makers")
+
+## this will randomly generate numbers 1 to 4 in a random order
+teamnumber1 <-sample(1:4,4, replace=F)
+
+## this wil do the same as above except replacement is true this is because df1 in males and females has 6 players as opposed to a multiple of 4
+teamnumber2<-sample(1:4,6, replace=T)
+
+## add the groupnumber as a column to the dataframes
+jnk1 <- cbind(df1,teamnumber2)
+jnk2 <- cbind(df2,teamnumber1)
+jnk3 <- cbind(df3,teamnumber1)
+
+## rename the column
+names(jnk1)[5] <- "team"
+names(jnk2)[5] <- "team"
+names(jnk3)[5] <- "team"
+
+finalmales <- rbind(jnk1,jnk2,jnk3)
+
+## repeat for females
+females <- females %>% 
+    mutate(type = lapply(total, function(x) {
+        if (x %in% c(0:9)) {
+            'wildcards'
+        } else if (x %in% c(10:16)) {
+            'game-changers'
+        } else if (x %in% c(16:25)) {
+            'play-makers'
+        }
+    }))
+
+dff1<- subset(females, type == "wildcards")
+
+dff2<- subset(females, type == "game-changers")
+
+
+fjnk1 <- cbind(dff1,teamnumber2)
+fjnk2 <- cbind(dff2,teamnumber1)
+
+names(fjnk1)[5] <- "team"
+names(fjnk2)[5] <- "team"
+
+finalfemales <- rbind(fjnk1,fjnk2)
+
