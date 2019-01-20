@@ -73,3 +73,4 @@ names(fjnk2)[5] <- "team"
 
 finalfemales <- rbind(fjnk1,fjnk2)
 
+allplayers <- rbind(finalmales, finalfemales)
