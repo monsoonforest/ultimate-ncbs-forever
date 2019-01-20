@@ -1,0 +1,131 @@
+---
+title: "ultimate-teams"
+author: "Chintan Sheth"
+date: "Sunday 20 January 2019"
+output: html_document
+---
+
+```{r}
+library(dplyr)
+## read in the csv
+play <- read.csv("IInd-2019-ultimate-ncbs-seeds-working.csv")
+
+## subset data for use
+playsub <- play %>% select(name, gender, total)
+
+playsub
+```
+
+NOW WE SPLIT THE MALES AND FEMALES AS WELL AS ASSIGN EACH PLAYER A CATEGORY
+
+```{r}
+##  group males and females separately
+males <- playsub %>% filter(gender=="male")
+females <- playsub %>% filter(gender=="female")
+
+## type the players differently
+males <- males %>%
+    mutate(type = lapply(total, function(x) {
+        if (x %in% c(0:9)) {
+            'wildcards'
+        } else if (x %in% c(10:16)) {
+            'game-changers'
+        } else if (x %in% c(16:25)) {
+            'play-makers'
+        }
+    }))
+
+## repeat for females
+females <- females %>% 
+    mutate(type = lapply(total, function(x) {
+        if (x %in% c(0:9)) {
+            'wildcards'
+        } else if (x %in% c(10:16)) {
+            'game-changers'
+        } else if (x %in% c(16:25)) {
+            'play-makers'
+        }
+    }))
+```
+
+Note 
+
+
+```{r}
+## create dataframes for the 3 player types
+df1 <- subset(males, type == "wildcards")
+
+df2 <- subset(males, type == "game-changers")
+
+df3 <- subset(males, type == "play-makers")
+
+## females 
+dff1<- subset(females, type == "wildcards")
+
+dff2<- subset(females, type == "game-changers")
+
+
+```
+
+THE CODE BELOW WILL GENERATE THE TEAM NUMBER RANDOMLY IN A LIST. HOWEVER, SINCE WE HAVE AN UEQUAL NUMBER OF PLAYERS IN THE WILDCARDS CATEGORY FOR MALES AND FEMALES WE HAVE TO SAMPLE 1:4, 6 TIMES WITH REPLACEMENT
+
+```{r}
+
+set.seed(13)
+## this will generate numbers 1 to 4 in a random order
+teamnumber1 <-sample(1:4, 4, replace=F)
+teamnumber1
+
+## this wil do the same as above, but in two sets since wildcards has 6 players
+teamnumber3 <- sample(1:4, 4, replace=F)
+teamnumber4 <- sample(1:4, 2, replace=F)
+
+teamnumber2 <- c(teamnumber3, teamnumber4)
+teamnumber2
+```
+
+TEAMS FOR MALES
+```{r}
+## add the groupnumber as a column to the dataframes
+jnk1 <- cbind(df1[sample(nrow(df1)),],teamnumber2)
+jnk2 <- cbind(df2[sample(nrow(df2)),],teamnumber1)
+jnk3 <- cbind(df3[sample(nrow(df3)),],teamnumber1)
+
+## rename the 5th column
+names(jnk1)[5] <- "team"
+names(jnk2)[5] <- "team"
+names(jnk3)[5] <- "team"
+
+finalmales <- rbind(jnk1,jnk2,jnk3)
+
+```
+
+TEAMS FOR FEMALES
+
+```{r}
+fjnk1 <- cbind(dff1[sample(nrow(dff1)),],teamnumber2)
+fjnk2 <- cbind(dff2[sample(nrow(dff2)),],teamnumber1)
+
+names(fjnk1)[5] <- "team"
+names(fjnk2)[5] <- "team"
+
+finalfemales <- rbind(fjnk1,fjnk2)
+
+```
+
+ALL GENDERS COMBINED
+
+```{r}
+allplayers <- rbind(finalmales, finalfemales)
+
+team1 <- allplayers %>% filter(team==1)
+team2 <- allplayers %>% filter(team==2)
+team3 <- allplayers %>% filter(team==3)
+team4 <- allplayers %>% filter(team==4)
+
+team1
+team2
+team3
+team4
+
+```

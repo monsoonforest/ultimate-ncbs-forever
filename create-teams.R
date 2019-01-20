@@ -37,9 +37,9 @@ teamnumber1 <-sample(1:4,4, replace=F)
 teamnumber2<-sample(1:4,6, replace=T)
 
 ## add the groupnumber as a column to the dataframes
-jnk1 <- cbind(df1,teamnumber2)
-jnk2 <- cbind(df2,teamnumber1)
-jnk3 <- cbind(df3,teamnumber1)
+jnk1 <- cbind(df1[sample(nrow(df1)),],teamnumber2)
+jnk2 <- cbind(df2[sample(nrow(df2)),],teamnumber1)
+jnk3 <- cbind(df3[sample(nrow(df3)),],teamnumber1)
 
 ## rename the column
 names(jnk1)[5] <- "team"
@@ -65,8 +65,8 @@ dff1<- subset(females, type == "wildcards")
 dff2<- subset(females, type == "game-changers")
 
 
-fjnk1 <- cbind(dff1,teamnumber2)
-fjnk2 <- cbind(dff2,teamnumber1)
+fjnk1 <- cbind(dff1[sample(nrow(dff1)),],teamnumber2)
+fjnk2 <- cbind(dff2[sample(nrow(dff2)),],teamnumber1)
 
 names(fjnk1)[5] <- "team"
 names(fjnk2)[5] <- "team"
