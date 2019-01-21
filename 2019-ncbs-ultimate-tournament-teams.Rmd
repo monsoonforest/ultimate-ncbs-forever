@@ -1,12 +1,15 @@
 ---
-title: "ultimate-teams"
+title: "TEAMS FOR THE 2019 NCBS ULTIMATE TOURNAMENT"
 author: "Chintan Sheth"
 date: "Sunday 20 January 2019"
-output: html_document
+output: pdf_document
 ---
 
-```{r}
+```{r, message = FALSE}
 library(dplyr)
+```
+
+```{r}
 ## read in the csv
 play <- read.csv("IInd-2019-ultimate-ncbs-seeds-working.csv")
 
@@ -35,6 +38,8 @@ males <- males %>%
         }
     }))
 
+males
+
 ## repeat for females
 females <- females %>% 
     mutate(type = lapply(total, function(x) {
@@ -46,6 +51,8 @@ females <- females %>%
             'play-makers'
         }
     }))
+
+females
 ```
 
 Note 
@@ -83,6 +90,7 @@ teamnumber4 <- sample(1:4, 2, replace=F)
 teamnumber2 <- c(teamnumber3, teamnumber4)
 teamnumber2
 ```
+
 
 TEAMS FOR MALES
 ```{r}
